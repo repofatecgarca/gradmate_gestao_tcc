@@ -1,0 +1,61 @@
+@import url('./base.css');
+
+body {
+    backdrop-filter: blur(7px) brightness(60%);
+    background-image: url("/img/fatec.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5vh;
+    min-height: 100vh;
+}
+
+.logo {
+    object-fit: contain;
+    height: 16vh;
+}
+
+.formulario {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5em;
+    max-width: 15em;
+    max-height: 23em;
+    background-color: #fff;
+    border-radius: 20px;
+    padding: 20px 30px;
+    border: 1px solid #000;
+
+    /* Margem artificial pra parecer mais centralizado */
+    margin-top: 5vh;
+}
+
+.textInput {
+    background-color: #E7E7E7;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+}
+
+.botaoSubmit {
+    padding: 10px 20px;
+    background-color: darkred;
+    color: #fff;
+    transition-duration: 300ms;
+    border-radius: 32px;
+    font-size: 24px;
+}
+
+.botaoSubmit:hover {
+    background-color: red;
+    transition-duration: 300ms;
+    border-color: red;
+}

@@ -1,0 +1,70 @@
+datasource db {
+  provider = "mysql"
+  url      = "mysql://root:root@127.0.0.1:3306/gestao-tcc"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Projeto {
+  id            Int     @id @default(autoincrement())
+  nome          String?
+  descricao     String? @db.Text
+  id_orientador Int?
+  id_curso      Int?
+  status        Int?
+
+  Orientador Professor? @relation(fields: [id_orientador], references: [id])
+  Curso      Curso?     @relation(fields: [id_curso], references: [id])
+  Aluno      Aluno[]
+  Arquivo    Arquivo[]
+}
+
+model Usuario {
+  id        Int         @id @default(autoincrement())
+  login     String
+  senha     String
+  tipo      Int?
+  Aluno     Aluno[]
+  Professor Professor[]
+}
+
+model Aluno {
+  id         Int     @id @default(autoincrement())
+  nome       String?
+  ra         String?
+  id_usuario Int?
+  id_curso   Int?
+  termo      Int?
+  id_projeto Int?
+
+  Usuario Usuario? @relation(fields: [id_usuario], references: [id])
+  Curso   Curso?   @relation(fields: [id_curso], references: [id])
+  Projeto Projeto? @relation(fields: [id_projeto], references: [id])
+}
+
+model Arquivo {
+  id         Int     @id @default(autoincrement())
+  arquivo    Bytes?
+  descricao  String?
+  id_projeto Int?
+  tipo       Int?
+
+  Projeto Projeto? @relation(fields: [id_projeto], references: [id])
+}
+
+model Curso {
+  id       Int       @id @default(autoincrement())
+  nome     String?
+  Alunos   Aluno[]
+  Projetos Projeto[]
+}
+
+model Professor {
+  id         Int       @id @default(autoincrement())
+  id_usuario Int?
+  nome       String?
+  Usuario    Usuario?  @relation(fields: [id_usuario], references: [id])
+  Projeto    Projeto[]
+}
