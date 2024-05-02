@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Index - GradMate</title>
+    <link rel="icon" type="image/x-icon" href="/img/favicon.png">
+    <link rel="stylesheet" href="/css/index.css">
+</head>
+
+<body>
+<%- include("border") -%>
+<main id="content-main" class="fade-in">
+    <h4>Métricas</h4>
+    <div class="container-metrics">
+        <div class="fade-in-2">
+            <div class="bostop">
+                <img src="/img/icone_projeto.png">
+                <p>Projetos<br>cadastrados</p>
+            </div>
+            <div class="bosttom">
+                <p><%= num_projetos %></p>
+            </div>
+        </div>
+        <div class="fade-in-3">
+            <div class="bostop">
+                <img src="/img/icone_orientador.png">
+                <p>Professores<br>cadastrados</p>
+            </div>
+            <div class="bosttom">
+                <p><%= num_professores %></p>
+            </div>
+        </div>
+        <div class="fade-in-4">
+            <div class="bostop">
+                <img src="/img/icone_aluno.png">
+                <p>Alunos<br>cadastrados</p>
+            </div>
+            <div class="bosttom">
+                <p><%= num_alunos %></p>
+            </div>
+        </div>
+        <div class="fade-in-5">
+            <div class="bostop">
+                <img src="/img/icone_curso.png">
+                <p>Cursos<br>cadastrados</p>
+            </div>
+            <div class="bosttom">
+                <p><%= num_cursos %></p>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+
+</html>

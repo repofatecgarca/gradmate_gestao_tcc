@@ -1,61 +1,80 @@
-@import url('./base.css');
+@import url("main.css");
 
 body {
-    backdrop-filter: blur(7px) brightness(60%);
-    background-image: url("/img/fatec.jpg");
+    background-image: url("../img/background.png");
     background-repeat: no-repeat;
+    background-attachment: fixed;
     background-size: cover;
-}
-
-.container {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 5vh;
-    min-height: 100vh;
+    height: 100vh;
+    width: 100vw;
 }
 
-.logo {
-    object-fit: contain;
-    height: 16vh;
-}
-
-.formulario {
+main {
+    position: relative;
+    background-color: #ffffff;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
-    gap: 1.5em;
-    max-width: 15em;
-    max-height: 23em;
-    background-color: #fff;
-    border-radius: 20px;
-    padding: 20px 30px;
-    border: 1px solid #000;
-
-    /* Margem artificial pra parecer mais centralizado */
-    margin-top: 5vh;
+    height: 70vh;
+    width: 70vw;
+    margin: auto;
 }
 
-.textInput {
-    background-color: #E7E7E7;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 20px;
+#logo {
+    width: 70%;
+    height: 12vh;
 }
 
-.botaoSubmit {
-    padding: 10px 20px;
-    background-color: darkred;
-    color: #fff;
-    transition-duration: 300ms;
-    border-radius: 32px;
-    font-size: 24px;
-}
-
-.botaoSubmit:hover {
+#submit {
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+    font-size: 1.5em;
+    padding: 0.2em 0.5em;
+    border:none;
     background-color: red;
-    transition-duration: 300ms;
-    border-color: red;
+    border-radius: 15px;
+    color: white;
+}
+
+#submit:hover {
+    background-color: indianred;
+}
+
+#right_side, #left_side {
+    display: flex;
+    flex-direction: column;
+}
+
+#left_side {
+    width: 65%;
+    text-align: left;
+    gap: 5px;
+}
+
+#right_side {
+    width: 25%;
+    text-align: left;
+    gap: 10px;
+}
+
+.lbl_input_txt {
+    font-size: 1.2em;
+}
+
+.input_txt {
+    font-size: 1em;
+    padding: 0.2em 0.5em;
+}
+
+#title_login {
+    font-weight: bold;
+    font-size: 3em;
+    padding-left: 1.5vw;
+    padding-bottom: 6vh;
 }

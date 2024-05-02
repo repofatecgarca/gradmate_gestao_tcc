@@ -1,0 +1,183 @@
+@import url("index.css");
+
+#content {
+    display: flex;
+    flex-direction: column;
+    gap: 2em;
+    margin: 2em 2em;
+}
+
+#top-part {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    gap: 2em;
+    justify-content: space-between;
+}
+
+#top-part-addbtn {
+    transition-duration: 200ms;
+    color: #343B26;
+    border-color: #343B26;
+    border-radius: 5px;
+    border-width: 2px;
+    padding: 0.4em 1.5em;
+    cursor: pointer;
+}
+
+#top-part-addbtn:hover {
+    transition-duration: 200ms;
+    background: #CEEC97;
+}
+
+#top-part-addbtn:active {
+    transition-duration: 200ms;
+    background: #67764C;
+}
+
+#top-part-search {
+    padding: 0.4em 0.4em;
+    width: 85%;
+}
+
+#top-part-searchbtn {
+    color: white;
+    background: #ff5757;
+    border-radius: 0;
+    border-width: 0;
+    padding: 0.4em 0.4em;
+    cursor: pointer;
+}
+
+.list {
+    display: flex;
+    flex-direction: column;
+    height: 35em;
+}
+
+.list > :nth-child(odd) {
+    background-color: lightgray;
+}
+
+.list-item {
+    display: flex;
+    flex-direction: row;
+    padding: 0.5em 0.5em;
+    gap: 1em;
+    position: relative;
+}
+
+.list-item :nth-child(1) {
+    width: 5em;
+}
+
+.list-item :nth-child(2) {
+    width: 20em;
+}
+
+.list-item :nth-child(3) {
+    width: 25em;
+}
+
+.edit-bttn {
+    position: absolute;
+    right: 10px;
+
+    background: #00000000;
+    border: none;
+    cursor: pointer;
+
+    margin-top: auto;
+    margin-bottom: auto;
+    top: 0;
+    bottom: 0;
+}
+.edit-bttn-a {
+    position: absolute;
+    right: 10px;
+
+    background: #00000000;
+    border: none;
+    cursor: pointer;
+
+    margin-top: auto;
+    margin-bottom: auto;
+    top: 0;
+    bottom: 0;
+}
+
+.rmv-bttn {
+    position: absolute;
+    right: 35px;
+
+    background: #00000000;
+    border: none;
+    cursor: pointer;
+
+    margin-top: auto;
+    margin-bottom: auto;
+    top: 0;
+    bottom: 0;
+}
+
+.rmv-bttn-a {
+    position: absolute;
+    right: 35px;
+
+    background: #00000000;
+    border: none;
+    cursor: pointer;
+
+    margin-top: auto;
+    margin-bottom: auto;
+    top: 0;
+    bottom: 0;
+}
+
+.footer {
+    text-align: right;
+}
+
+.page-button {
+    background: #ff5757;
+    border-radius: 0;
+    border-width: 0;
+    padding: 0.4em 1.4em;
+}
+
+.formulario {
+    display: flex;
+    flex-direction: column;
+}
+
+#aluno_form > label {
+    width: 20em;
+}
+
+#aluno_form > input[type="text"] {
+    width: 20em;
+}
+
+#aluno_form > select {
+    width: 20em;
+}
+
+#aluno_form > input[type="submit"] {
+    width: 5em;
+}
+
+#project_form > label {
+    width: 20em;
+}
+
+#project_form > input[type="text"] {
+    width: 20em;
+}
+
+#project_form > select {
+    width: 20em;
+}
+
+#project_form > input[type="submit"] {
+    width: 5em;
+}

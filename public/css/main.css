@@ -1,0 +1,103 @@
+@import url("reset.css");
+
+*, body, input, a {
+    font-family: "Trebuchet MS", serif;
+    text-decoration: none;
+}
+
+body {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    display: grid;
+
+    grid-template-columns: 200px auto;
+    grid-template-rows: 60px auto;
+}
+
+header {
+    background-color: #ff5757;
+    display: flex;
+    padding: 1vh 2vw 1vh 1vw;
+
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row;
+    grid-column: span 2;
+}
+
+aside {
+    background-color: #111111;
+    padding: 20px;
+
+    flex-direction: column;
+}
+
+aside > ul {
+    padding-bottom:10px;
+}
+
+aside > ul > li {
+    padding-bottom: 10px;
+    font-size: 20px;
+    color: white;
+}
+
+aside > ul > li > a {
+    font-size: 15px;
+    color: white;
+}
+
+main {
+}
+
+#logo {
+    width: 170px;
+    object-fit: cover;
+}
+
+#header_leave_button > a {
+    font-size: 1.5rem;
+    color: white;
+}
+
+h4 {
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.fade-in { animation: fadeIn 1.5s linear; }
+.fade-in-2 { animation: fadeIn 2.0s ease-in; }
+.fade-in-3 { animation: fadeIn 3.0s ease-in; }
+.fade-in-4 { animation: fadeIn 4.0s ease-in; }
+.fade-in-5 { animation: fadeIn 4.5s ease-in; }
+.fade-in-6 { animation: fadeIn 5.0s ease-in; }
+.fade-in-7 { animation: fadeIn 5.5s ease-in; }
+.fade-in-8 { animation: fadeIn 6.0s ease-in; }
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+input[type="text"],
+input[type="password"],
+textarea {
+    transition-duration: 2s;
+    border-width: 0 0 2px 0;
+    outline: none;
+    resize: none;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+textarea {
+    transition-duration: 100ms;
+    border-color: lightgray;
+    outline: none;
+    resize: none;
+}
+
+#swal2-html-container {
+    overflow-x: hidden;
+}

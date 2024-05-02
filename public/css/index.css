@@ -1,0 +1,57 @@
+@import url("main.css");
+
+#content-main {
+    margin: 2em 2em;
+}
+
+.container-metrics {
+    position: relative;
+    border-radius: 5px;
+    width: auto;
+    height: 15vh;
+    padding: 1em;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    background-color: lightgray;
+}
+
+.container-metrics > div {
+    width: 10vw;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    justify-content: center;
+    padding: 5px;
+}
+
+.container-metrics > div > .bostop {
+    height: 40%;
+    display: flex;
+    align-items: center;
+}
+
+.container-metrics > div > .bostop > img {
+    width: 2.5vw;
+    height: 2.5vw;
+    padding: 0.1vw;
+    margin-right: 0.5vw;
+    border: 2px solid black;
+}
+
+.container-metrics > div > .bostop > p {
+    display: inline;
+    vertical-align: middle;
+}
+
+.container-metrics > div > .bosttom {
+    height: 40%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.container-metrics > div > .bosttom > p {
+    font-weight: bold;
+    font-size: 3em;
+}

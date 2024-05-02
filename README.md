@@ -38,15 +38,17 @@ DB_PORT=3306
 DB_USER=seu-user-aqui
 DB_PASS=sua-senha-aqui
 APP_PORT=7075
+SECRET_KEY=chave-secreta
 ```
 
-| Configuração | Definição |
-|-|-|
+| Configuração | Definição                                                                                                                                                                                       |
+|-|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `DB_HOST` | É o endereço onde o banco de dados está instalado. Se você possui o banco rodando na mesma máquina que você está rodando o código, esse campo pode ser definido como `127.0.0.1` ou `localhost` |
-| `DB_PORT` | É a porta do seu banco, configurada ao instalar o MySQL. Por padrão, é a porta `3306`. |
-| `DB_USER` | User do banco de dados, configurado ao instalar o MySQL. |
-| `DB_PASS` | Senha do banco de dados, configurado ao instalar o MySQL. |
-| `APP_PORT` | É a porta que será utilizada para se conectar ao servidor. |
+| `DB_PORT` | É a porta do seu banco, configurada ao instalar o MySQL. Por padrão, é a porta `3306`.                                                                                                          |
+| `DB_USER` | User do banco de dados, configurado ao instalar o MySQL.                                                                                                                                        |
+| `DB_PASS` | Senha do banco de dados, configurado ao instalar o MySQL.                                                                                                                                       |
+| `APP_PORT` | É a porta que será utilizada para se conectar ao servidor.                                                                                                                                      |
+| `SECRET_KEY` | É a chave que será usada para encriptar o JWT.                                                                                                                                                  |
 
 ### Passo 2 - Fazer o build do projeto
 

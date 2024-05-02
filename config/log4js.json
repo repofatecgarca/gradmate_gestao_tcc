@@ -1,0 +1,11 @@
+{
+  "appenders": {
+    "console": {
+      "type": "console",
+      "pattern": "%d{dd/MM/yyyy hh:mm:ss} - %m"
+    }
+  },
+  "categories": {
+    "default": { "appenders": ["console" ], "level": "info" }
+  }
+}

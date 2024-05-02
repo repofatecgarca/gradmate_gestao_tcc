@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professores - GradMate</title>
+    <link rel="icon" type="image/x-icon" href="/img/favicon.png">
+    <link rel="stylesheet" href="/css/tabelasetc.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.5/dist/sweetalert2.all.min.js"></script>
+</head>
+
+<body>
+<%- include("border") -%>
+<main id="content" class="fade-in">
+    <div id="top-part">
+        <input type="text" id="top-part-search" placeholder="Buscar por nome do professor"/>
+        <button id="top-part-addbtn">Adicionar</button>
+    </div>
+    <div class="list" data-professores="<%= JSON.stringify(professores) %>">
+        <% if (!professores || professores.length === 0) { %>
+            <p>Nenhum professor encontrado!</p>
+        <% } %>
+    </div>
+    <% if (professores && professores.length > 0) { %>
+        <div class="footer">
+            <button class="page-button" onclick="navigate(-1)">🠈</button>
+            <span>Página <span id="currentPage"></span> de <span id="totalPages"></span></span>
+            <button class="page-button" onclick="navigate(1)">🠊</button>
+        </div>
+    <% } %>
+</main>
+</body>
+
+<script>
+    let professores = JSON.parse(document.querySelector(".list").dataset.professores);
+    const itemsPerPage = 15;
+    let currentPage = 1;
+
+    const currentPageElement = document.getElementById("currentPage");
+    const totalPagesElement = document.getElementById("totalPages");
+    const footer = document.querySelector(".footer");
+    const searchInput = document.getElementById("top-part-search");
+
+    function renderPage(page, filteredProfessores = professores) {
+        const startIndex = (page - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const pageItems = filteredProfessores.slice(startIndex, endIndex);
+
+        const listContainer = document.querySelector(".list");
+        listContainer.innerHTML = "";
+
+        pageItems.forEach(prof => {
+            const listItem = document.createElement("div");
+            listItem.classList.add("list-item");
+            listItem.innerHTML += "<span>" + prof.id + "</span>";
+            listItem.innerHTML += "<span>" + prof.nome + "</span>";
+            listItem.innerHTML += "<span>" + prof.descricao_curta + "</span>";
+            listItem.innerHTML += `<button class="edit-bttn" onclick="abrirFormulario(${prof.id})">📝</button>`;
+            listItem.innerHTML += `<button class="rmv-bttn" onclick="rm(${prof.id}, '${prof.nome}')">❌</button>`;
+            listContainer.appendChild(listItem);
+        });
+
+        currentPageElement.textContent = currentPage;
+        totalPagesElement.textContent = Math.ceil(filteredProfessores.length / itemsPerPage);
+
+        footer.style.display = filteredProfessores.length <= itemsPerPage ? "none" : "block";
+    }
+
+    function navigate(direction) {
+        const totalPages = Math.ceil(professores.length / itemsPerPage);
+        currentPage += direction;
+        currentPage = Math.max(1, Math.min(currentPage, totalPages));
+        renderPage(currentPage);
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        renderPage(currentPage);
+    });
+
+    function rm(id, nome) {
+        var remove = confirm(`Você tem certeza que deseja remover o professor ${nome}?`);
+        if (remove) {
+            location.href = "/professores/remove?id=" + id;
+        }
+    }
+
+    function filterProfessores() {
+        const query = searchInput.value.toLowerCase();
+        const filteredProfessores = professores.filter(prof => prof.nome.toLowerCase().includes(query));
+        currentPage = 1;
+        renderPage(currentPage, filteredProfessores);
+    }
+
+    searchInput.addEventListener("input", filterProfessores);
+
+    document.getElementById("top-part-addbtn").addEventListener("click", () => abrirFormulario());
+
+    async function abrirFormulario(id = null) {
+        try {
+            let professor = {nome: "", descricao_curta: "", link_curriculo_lattes: ""};
+
+            if (id) {
+                const professorResponse = await fetch(`/professores/professor?id=${id}`);
+                if (professorResponse.ok) {
+                    professor = await professorResponse.json();
+                    professor = professor.professor[0];
+                }
+            }
+            console.log(professor)
+
+            Swal.fire({
+                heightAuto: false,
+                title: id ? "Editar professor" : "Adicionar novo professor",
+                html: `
+                    <form id="aluno_form">
+                        <label for="nome">Nome</label><br>
+                        <input type="text" id="nome" name="nome" value="${professor.nome}" class="swal2-input" required>
+                        <br><br>
+                        <label for="descricao_curta">Descrição</label><br>
+                        <input type="text" id="descricao_curta" name="descricao_curta" value="${professor.descricao_curta}" class="swal2-input" required>
+                        <br><br>
+                        <label for="descricao_curta">Link do Currículo Lattes</label><br>
+                        <input type="text" id="link_curriculo_lattes" name="link_curriculo_lattes" value="${professor.link_curriculo_lattes}" class="swal2-input" required>
+                    </form>
+                `,
+                showCancelButton: true,
+                confirmButtonText: id ? "Atualizar" : "Adicionar",
+                preConfirm: () => {
+                    const nome = document.getElementById('nome').value;
+                    const descricao_curta = document.getElementById('descricao_curta').value;
+                    const link_curriculo_lattes = document.getElementById('link_curriculo_lattes').value;
+                    if (!nome) {
+                        Swal.showValidationMessage("O nome do professor é obrigatório!");
+                        return false;
+                    }
+
+                    return fetch(`/professores${id ? `?id=${id}` : ''}`, {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({
+                            id: id,
+                            nome: nome,
+                            descricao_curta: descricao_curta,
+                            link_curriculo_lattes: link_curriculo_lattes
+                        })
+                    }).then(response => {
+                        if (!response.ok) throw new Error(response.statusText);
+                        return response;
+                    }).catch(error => Swal.showValidationMessage(`Erro: ${error}`));
+                }
+            }).then(result => {
+                if (result.isConfirmed) {
+                    Swal.fire('Sucesso!', 'O professor foi salvo com sucesso!', 'success');
+                    setTimeout(() => window.location.reload(), 2000);
+                }
+            });
+        } catch (error) {
+            Swal.fire('Erro', 'Erro ao carregar dados. Tente novamente.', 'error');
+        }
+    }
+</script>
+</html>

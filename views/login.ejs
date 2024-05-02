@@ -1,29 +1,46 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt">
 
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="/css/reset.css" rel="stylesheet">
-    <link href="/css/login.css" rel="stylesheet">
-    <title>GradMate</title>
+    <title>Login - GradMate</title>
     <link rel="icon" type="image/x-icon" href="/img/favicon.png">
+    <link rel="stylesheet" href="/css/login.css">
+
+
+    <script src="
+https://cdn.jsdelivr.net/npm/sweetalert2@11.14.5/dist/sweetalert2.all.min.js
+"></script>
 </head>
 
-<body class="fade-in">
-    <div class="container">
-        <form class="formulario" action="/login" method="POST" style="padding-top: 0">
-            <div class="formulario" style="gap: 5px; border: none; padding: 0">
-            <img src="/img/logo.png" width="210" height="50" style="object-fit:cover">
-            <h2 class="bold" style="margin:0">Login</h2> 
-            </div>
-            <input class="textInput" type="email" name="login" placeholder="Email">
-            <input class="textInput" type="password" name="senha" placeholder="Senha">
-            <input class="botaoSubmit" type="submit" value="Entrar">
-        </form>
-        <img class="logo" src="/img/logo_login.png">
+<body>
+<div style="width: 100vw; height: 100vh; display: grid; align-items: center; justify-content: center" class="fade-in">
+<main>
+    <div id="left_side">
+        <img src="img/logo.svg" alt="Logo do sistema" id="logo"/>
+        <p id="title_login">Login</p>
     </div>
-</body>
+    <form id="right_side" action="/login" method="POST">
+        <label for="input_user" class="lbl_input_txt">Usuário</label>
+        <input type="text" name="user" id="input_user" class="input_txt" maxlength="50">
+        <label for="input_pass" class="lbl_input_txt">Senha</label>
+        <input type="password" name="pass" id="input_pass" class="input_txt" maxlength="50">
+        <button id="submit">Entrar</button>
+    </form>
+    <% if (typeof loginValid !== 'undefined' && !loginValid) { %>
+        <script>
+            setTimeout(function () {
+                Swal.fire({
+                    title: "Login inválido",
+                    text: "Verifique suas credenciais e tente novamente!",
+                    icon: "error"
+                })
+            }, 200)
 
+        </script>
+    <% } %>
+</main>
+</div>
+</body>
 </html>

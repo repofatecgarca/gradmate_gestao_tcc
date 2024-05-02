@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Index - GradMate</title>
+    <link rel="icon" type="image/x-icon" href="/img/favicon.png">
+    <link rel="stylesheet" href="/css/tabelasetc.css">
+    <style>
+        .card {
+            display: flex;
+            flex-direction: row;
+            border-radius: 5px;
+            gap: 1em;
+            padding: 10px;
+        }
+
+        .imgcard {
+            width: 5vw;
+            height: 5vw;
+            object-fit: cover;
+            border: black 2px solid;
+        }
+
+        .card > p {
+            text-align: center;
+        }
+
+        .italic {
+            color: #444;
+            font-style: italic;
+        }
+    </style>
+</head>
+
+<body>
+<%- include("border") -%>
+<main id="content" class="fade-in" style="overflow-x: hidden">
+    <div>
+        <h4>Sobre</h4>
+        <p style="height: 2.5em">O GradMate é um software de gerenciamento de trabalhos de conclusão de curso, cujo
+            objetivo é trazer uma
+            alternativa para a coordenação da FATEC para o lançamento dos documentos necessários para realizar o
+            processo de
+            avaliação de TCCs.</p>
+        <p>O projeto iniciou seu desenvolvimento no ano de 2024 como trabalho de conclusão de curso de alunos do curso
+            articulado médio-superior de desenvolvimento de sistemas da FATEC Garça - Deputado Julio Julinho Marcondes
+            de
+            Moura.</p>
+    </div>
+    <div>
+        <h4>Desenvolvedores</h4>
+        <div style="display: flex; flex-direction: column; justify-content: space-around;">
+            <div class="card fade-in-2">
+                <img class="imgcard" src="img/cr_cesar.jpg">
+                <div style="display: flex; flex-direction: column; justify-content: center;">
+                    <p style="height: 1.5em">César Augusto Rampazo Mantovane Tavares</p>
+                    <p class="italic" style="height: 1em">Documentation</p>
+                </div>
+            </div>
+            <div class="card fade-in-3">
+                <img class="imgcard" src="img/cr_davi.jpg">
+                <div style="display: flex; flex-direction: column; justify-content: center;">
+                    <p style="min-height: 1.5em">Davi Biko dos Santos Batista</p>
+                    <p class="italic" style="height: 1em">Infrastructure manager</p>
+                </div>
+            </div>
+            <div class="card fade-in-4">
+                <img class="imgcard" src="img/cr_fonseca.jpg">
+                <div style="display: flex; flex-direction: column; justify-content: center;">
+                    <p style="min-height: 1.5em">Isabela da Fonseca Santos</p>
+                    <p class="italic" style="height: 1em">Back-end developer</p>
+                </div>
+            </div>
+            <div class="card fade-in-5">
+                <img class="imgcard" src="img/cr_piva.jpg">
+                <div style="display: flex; flex-direction: column; justify-content: center;">
+                    <p style="min-height: 1.5em">Isabella Cristina Piva</p>
+                    <p class="italic" style="height: 1em">UI & UX developer</p>
+                </div>
+            </div>
+            <div class="card fade-in-6">
+                <img class="imgcard" src="img/cr_matheus.jpg">
+                <div style="display: flex; flex-direction: column; justify-content: center;">
+                    <p style="min-height: 1.5em"> Matheus Sanches Rodrigues</p>
+                    <p class="italic" style="height: 1em">QA tester</p>
+                </div>
+            </div>
+            <div class="card fade-in-7">
+                <img class="imgcard" src="img/cr_pablo.jpg">
+                <div style="display: flex; flex-direction: column; justify-content: center;">
+                    <p style="min-height: 1.5em">Pablo Antonio Garcia Silva Junior</p>
+                    <p class="italic" style="height: 1em">Lead developer</p>
+                </div>
+            </div>
+            <div class="card fade-in-8">
+                <img class="imgcard" src="img/cr_thalita.jpg">
+                <div style="display: flex; flex-direction: column; justify-content: center;">
+                    <p style="min-height: 1.5em">Thalita de Araújo Pereira dos Santos</p>
+                    <p class="italic" style="height: 1em">Front-end developer</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>

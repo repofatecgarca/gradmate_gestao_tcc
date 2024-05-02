@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Index - GradMate</title>
+    <link rel="icon" type="image/x-icon" href="/img/favicon.png">
+    <link rel="stylesheet" href="/css/tabelasetc.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.5/dist/sweetalert2.all.min.js"></script>
+    <style>
+        #content {
+            gap: 1em;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .form-group > label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        textarea, input[type="text"] {
+            width: 30em;
+            height: 1.2em;
+        }
+
+        select {
+            width: 15em;
+        }
+    </style>
+</head>
+
+<body style="height: 100vh">
+<%- include("border") -%>
+<main id="content" class="fade-in">
+    <h4>Gerar Documentos</h4>
+    <div class="form-group">
+        <label for="document-type">Selecione o tipo de documento:</label>
+        <select id="document-type" onchange="toggleFields()">
+            <option value="">Selecione...</option>
+            <option value="ata_defesa">Ata de Defesa</option>
+            <option value="ata_qualificacao">Ata de Qualificação</option>
+            <option value="cert_orientador_defesa">Certificado de Defesa do Orientador</option>
+            <option value="cert_orientador_qualificacao">Certificado de Qualificação do Orientador</option>
+            <option value="certificado_ads">Certificado de Defesa do Aluno</option>
+            <option value="ficha_avaliacao_defesa">Ficha de Avaliação da Defesa</option>
+            <option value="termo_autorizacao_fatecs">Termo de Autorização</option>
+        </select>
+    </div>
+
+    <form id="document-form" onsubmit="handleSubmit(event)" style="border: 2px solid black; border-radius: 5px; width: 40vw; padding: 1.5em 1em">
+        <div class="form-group hidden" id="nome_projeto-field">
+            <label for="nome_projeto">Projeto:</label>
+            <input type="text" id="nome_projeto" name="nome_projeto">
+            <select id="projeto-select" onchange="updateProjectFields(this)">
+                <option value="">Selecionar projeto...</option>
+            </select>
+        </div>
+        <div class="form-group hidden" id="nome_alunos-field">
+            <label for="nome_alunos">Alunos:</label>
+            <input type="text" id="nome_alunos" name="nome_alunos" placeholder="Separado por vírgulas">
+            <select id="aluno-select" onchange="fillField('nome_alunos', this)">
+                <option value="">Selecionar aluno...</option>
+            </select>
+        </div>
+        <div class="form-group hidden" id="nome_orientador-field">
+            <label for="nome_orientador">Professor Orientador:</label>
+            <input type="text" id="nome_orientador" name="nome_orientador">
+            <select id="orientador-select" onchange="fillField('nome_orientador', this)">
+                <option value="">Selecionar orientador...</option>
+            </select>
+        </div>
+        <div class="form-group hidden" id="nome_professores-field">
+            <label for="nome_professores">Professores Convidados:</label>
+            <input type="text" id="nome_professores" name="nome_professores" placeholder="Separado por vírgulas">
+            <select id="professor-select" onchange="fillField('nome_professores', this)">
+                <option value="">Selecionar professor...</option>
+            </select>
+        </div>
+        <div class="form-group hidden" id="curso-field">
+            <label for="curso">Curso:</label>
+            <textarea id="curso" name="curso"></textarea>
+            <select id="curso-select" onchange="fillField('curso', this)">
+                <option value="">Selecionar curso...</option>
+            </select>
+        </div>
+        <div class="form-group hidden" id="semestre-field">
+            <label for="semestre">Semestre:</label>
+            <input type="text" id="semestre" name="semestre" value="1">
+        </div>
+        <div class="form-group hidden" id="aano-field">
+            <label for="aano">Ano:</label>
+            <input type="text" id="aano" name="aano">
+        </div>
+
+        <div class="form-group hidden" id="data_defesa-field">
+            <label for="data_defesa">Data da Defesa:</label>
+            <input type="date" id="data_defesa" name="data_defesa">
+        </div>
+        <div class="form-group hidden" id="data-field">
+            <label for="data">Data:</label>
+            <input type="date" id="data" name="data">
+        </div>
+        <div class="form-group hidden" id="data_inicio-field">
+            <label for="data_inicio">Início do período de entrega do TCC:</label>
+            <input type="date" id="data_inicio" name="data_inicio">
+        </div>
+        <div class="form-group hidden" id="data_final-field">
+            <label for="data_final">Final do período de entrega do TCC:</label>
+            <input type="date" id="data_final" name="data_final">
+        </div>
+
+        <div class="form-group" id="data_geracao-field" hidden>
+            <label for="data_geracao">Data de Geração:</label>
+            <input type="date" id="data_geracao" name="data_geracao" readonly>
+        </div>
+
+        <button type="submit">Gerar documento</button>
+    </form>
+
+    <script>
+        let alunos = "";
+        let projetos = "";
+        let orientadores = "";
+        let cursos = "";
+
+        const fieldsConfig = {
+            ata_defesa: ["nome_alunos", "nome_projeto", "nome_orientador", "nome_professores", "data_defesa", "data_geracao", "curso"],
+            ata_qualificacao: ["nome_alunos", "nome_projeto", "nome_orientador", "data", "curso"],
+            cert_orientador_defesa: ["nome_alunos", "nome_projeto", "nome_orientador", "curso", "semestre", "aano"],
+            cert_orientador_qualificacao: ["nome_alunos", "nome_projeto", "nome_orientador", "curso", "semestre", "aano"],
+            certificado_ads: ["nome_alunos", "nome_projeto", "nome_orientador", "nome_professores", "data_defesa", "curso"],
+            ficha_avaliacao_defesa: ["nome_alunos", "nome_projeto", "nome_orientador", "nome_professores", "data_inicio", "data_final", "curso"],
+            termo_autorizacao_fatecs: ["nome_alunos", "nome_projeto", "nome_orientador", "data_geracao", "data", "curso"]
+        };
+
+        function toggleFields() {
+            const docType = document.getElementById('document-type').value;
+            const allFields = ["nome_alunos", "nome_projeto", "nome_orientador", "nome_professores", "data_defesa", "data_geracao", "data", "data_inicio", "data_final", "curso", "semestre", "aano"];
+
+            allFields.forEach(field => {
+                console.log(field)
+                document.getElementById(`${field}-field`).classList.add("hidden");
+            });
+
+            if (docType && fieldsConfig[docType]) {
+                fieldsConfig[docType].forEach(field => {
+                    document.getElementById(`${field}-field`).classList.remove("hidden");
+                });
+            }
+        }
+
+        async function fetchData() {
+            Swal.fire({
+                title: 'Carregando dados...',
+                heightAuto: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            try {
+                alunos = await fetch('/alunos/all').then(res => res.json());
+                projetos = await fetch('/projetos/all').then(res => res.json());
+                orientadores = await fetch('/professores/all').then(res => res.json());
+                cursos = await fetch('/cursos/all').then(res => res.json());
+
+                alunos = alunos.length === undefined ? alunos.alunos : alunos;
+                projetos = projetos.length === undefined ? projetos.projetos : projetos;
+                orientadores = orientadores.length === undefined ? orientadores.professores : orientadores;
+                cursos = cursos.length === undefined ? cursos.cursos : cursos;
+
+                populateSelect('aluno-select', alunos);
+                populateSelect('projeto-select', projetos);
+                populateSelect('orientador-select', orientadores);
+                populateSelect('professor-select', orientadores);
+                populateSelect('curso-select', cursos);
+
+                Swal.close();
+            } catch (error) {
+                Swal.fire('Erro', 'Não foi possível carregar os dados', 'error');
+                console.error(error);
+            }
+        }
+
+        function populateSelect(selectId, data) {
+            console.log(data.length)
+            if (!data || !data.length) {
+                return
+            }
+            const select = document.getElementById(selectId);
+            for (const item of data) {
+                const option = document.createElement('option');
+                option.value = JSON.stringify(item);
+                option.textContent = item.nome;
+                select.appendChild(option);
+            }
+
+        }
+
+        function updateProjectFields(select) {
+            if (!select.value) return;
+
+            document.getElementById("nome_projeto").value = "";
+            document.getElementById("nome_alunos").value = "";
+            document.getElementById("nome_orientador").value = "";
+            document.getElementById("curso").value = "";
+
+            const selectedProject = projetos.filter(projeto => projeto.id === JSON.parse(select.value).id)[0];
+            console.log(selectedProject)
+            document.getElementById("nome_projeto").value = selectedProject.nome;
+            document.getElementById("curso").value = selectedProject.curso ? selectedProject.curso : "";
+            document.getElementById("nome_orientador").value = selectedProject.professor ? selectedProject.professor : "";
+
+            const alunosProjeto = alunos.filter(aluno => aluno.projeto && aluno.projeto === selectedProject.nome);
+            document.getElementById("nome_alunos").value = alunosProjeto.map(aluno => aluno.nome).join(", ");
+        }
+
+        function fillField(fieldId, select) {
+            const inputField = document.getElementById(fieldId);
+            const selectedValue = JSON.parse(select.value).nome;
+            if (selectedValue) {
+                if (inputField.value) {
+                    inputField.value += `, ${selectedValue}`;
+                } else {
+                    inputField.value = selectedValue;
+                }
+            }
+        }
+
+        function handleSubmit(event) {
+            event.preventDefault();
+            const docType = document.getElementById('document-type').value;
+            const requiredFields = fieldsConfig[docType];
+            let isValid = true;
+            let formData = { docType: docType };
+            let validationErrors = [];
+
+            console.log(docType)
+            console.log(requiredFields)
+
+            requiredFields.forEach(field => {
+                console.log(field)
+                let fieldValue = document.getElementById(field).value;
+                if (!fieldValue) {
+                    validationErrors.push(`- O campo ${field} é obrigatório`);
+                    isValid = false;
+                } else {
+                    if (field === "data_defesa") {
+                        const [year, month, day] = fieldValue.split("-");
+                        formData["ano"] = year
+                        formData["mes"] = month
+                        formData["dia"] = day
+                    }
+                    if (field === "data_geracao") {
+                        const [year, month, day] = fieldValue.split("-");
+                        formData["ano_geracao"] = year
+                        formData["mes_geracao"] = month
+                        formData["dia_geracao"] = day
+                    }
+                    if (field === "data_geracao" || field === "data_defesa") {
+                        return
+                    }
+
+                    if (field === "data" || field === "data_inicio" || field === "data_final") {
+                        const [year, month, day] = fieldValue.split("-");
+                        fieldValue = `${day}/${month}/${year}`;
+                    }
+                    formData[field] = (field === "nome_alunos" || field === "nome_professores") ? fieldValue.split(",") : fieldValue;
+                }
+            });
+
+            if (!isValid) {
+                Swal.fire({
+                    title: 'Erros de Validação',
+                    html: validationErrors.join('<br>'),
+                    icon: 'warning',
+                    heightAuto: false
+                });
+                return;
+            }
+
+            fetch('/documentos', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(formData)
+            }).then(response => {
+                if (response.ok) {
+                    Swal.fire({
+                        title: "Sucesso",
+                        text: "Documento gerado com sucesso!",
+                        icon: "success",
+                        heightAuto: false
+                    });
+                    return response.blob();
+                } else {
+                    Swal.fire({
+                        title: "Erro",
+                        text: "Erro ao gerar documento",
+                        icon: "error",
+                        heightAuto: false
+                    });
+                }
+            }).then(blob => {
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `document_${Date.now()}.pdf`;
+                link.click();
+            }).catch(error => {
+                console.error('Erro:', error);
+                Swal.fire({
+                    title: "Erro",
+                    text: "Erro ao enviar o formulário",
+                    icon: "error",
+                    heightAuto: false
+                });
+            });
+        }
+
+        window.onload = fetchData;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const dataGeracaoInput = document.getElementById('data_geracao');
+            const today = new Date().toISOString().split("T")[0];
+            dataGeracaoInput.value = today;
+        });
+    </script>
+</main>
+</body>
+</html>

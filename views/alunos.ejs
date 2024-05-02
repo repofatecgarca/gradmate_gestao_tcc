@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Index - GradMate</title>
+    <link rel="icon" type="image/x-icon" href="/img/favicon.png">
+    <link rel="stylesheet" href="/css/tabelasetc.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.5/dist/sweetalert2.all.min.js"></script>
+</head>
+
+<body style="height: 100vh">
+<%- include("border") -%>
+<main id="content" class="fade-in">
+    <div id="top-part">
+        <input type="text" id="top-part-search" placeholder="Buscar por nome do aluno"/>
+        <button id="top-part-addbtn">Adicionar</button>
+    </div>
+    <div class="list" data-alunos="<%= JSON.stringify(alunos) %>">
+        <% if (!alunos || alunos.length === 0) { %>
+            <p>Nenhum aluno encontrado!</p>
+        <% } %>
+    </div>
+    <% if (alunos && alunos.length > 0) { %>
+        <div class="footer">
+            <button class="page-button" onclick="navigate(-1)">🠈</button>
+            <span>Página <span id="currentPage"></span> de <span id="totalPages"></span></span>
+            <button class="page-button" onclick="navigate(1)">🠊</button>
+        </div>
+    <% } %>
+</main>
+</body>
+
+<script>
+    let alunos = JSON.parse(document.querySelector(".list").dataset.alunos);
+    const itemsPerPage = 15;
+    let currentPage = 1;
+
+    const currentPageElement = document.getElementById("currentPage");
+    const totalPagesElement = document.getElementById("totalPages");
+    const footer = document.querySelector(".footer");
+    const searchInput = document.getElementById("top-part-search");
+
+    function renderPage(page, filteredAlunos = alunos) {
+        const startIndex = (page - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const pageItems = filteredAlunos.slice(startIndex, endIndex);
+
+        const listContainer = document.querySelector(".list");
+        listContainer.innerHTML = "";
+
+        pageItems.forEach(aluno => {
+            const listItem = document.createElement("div");
+            listItem.classList.add("list-item");
+            listItem.innerHTML += "<span>" + aluno.id + "</span>";
+            listItem.innerHTML += "<span>" + aluno.nome + "</span>";
+            listItem.innerHTML += "<span>" + aluno.curso + "</span>";
+            listItem.innerHTML += "<span>" + aluno.ra + "</span>";
+            listItem.innerHTML += `<button class="edit-bttn" onclick="abrirFormulario(${aluno.id})">📝</button>`;
+            listItem.innerHTML += `<button class="rmv-bttn" onclick="rm(${aluno.id}, '${aluno.nome}')">❌</button>`;
+            listContainer.appendChild(listItem);
+        });
+
+        currentPageElement.textContent = currentPage;
+        totalPagesElement.textContent = Math.ceil(filteredAlunos.length / itemsPerPage);
+
+        footer.style.display = filteredAlunos.length <= itemsPerPage ? "none" : "block";
+    }
+
+    function navigate(direction) {
+        const totalPages = Math.ceil(alunos.length / itemsPerPage);
+        currentPage += direction;
+        currentPage = Math.max(1, Math.min(currentPage, totalPages));
+        renderPage(currentPage);
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        renderPage(currentPage);
+    });
+
+    function rm(id, nome) {
+        var remove = confirm(`Você tem certeza que deseja remover o aluno ${nome}?`);
+        if (remove) {
+            location.href = "/alunos/remove?id=" + id;
+        }
+    }
+
+    function filterAlunos() {
+        const query = searchInput.value.toLowerCase();
+        const filteredAlunos = alunos.filter(aluno => aluno.nome.toLowerCase().includes(query));
+        currentPage = 1;
+        renderPage(currentPage, filteredAlunos);
+    }
+
+    searchInput.addEventListener("input", filterAlunos);
+
+    document.getElementById("top-part-addbtn").addEventListener("click", () => abrirFormulario());
+
+    async function abrirFormulario(id = null) {
+        Swal.fire({
+            heightAuto: false,
+            title: "Carregando dados...",
+            didOpen: () => Swal.showLoading()
+        });
+
+        try {
+            const cursosResponse = await fetch("/cursos/data");
+            const cursos = await cursosResponse.json();
+            const projetosResponse = await fetch("/projetos/data");
+            const projetos = await projetosResponse.json();
+
+            let aluno = { nome: "", curso: "", ra: "", projeto: "" };
+
+            if (id) {
+                const alunoResponse = await fetch(`/aluno?id=${id}`);
+                if (alunoResponse.ok) {
+                    aluno = await alunoResponse.json();
+                    aluno = aluno.aluno[0]
+                }
+            }
+
+            console.log(aluno)
+            Swal.close();
+            Swal.fire({
+                heightAuto: false,
+                title: id ? "Editar aluno" : "Adicionar novo aluno",
+                html: `
+                    <form id="aluno_form">
+                        <label for="nome">Nome</label>
+                        <input type="text" id="nome" name="nome" value="${aluno.nome}" class="swal2-input" required>
+                        <br><br>
+                        <label for="nome">RA</label>
+                        <input type="text" id="ra" name="ra" value="${aluno.ra}" class="swal2-input" required>
+                        <br><br>
+                        <label for="curso">Curso</label><br>
+                        <select id="curso" name="curso" class="swal2-input">
+                            ${cursos.map(curso => `<option value="${curso.id}" ${aluno.id_curso === curso.id ? 'selected' : ''}>${curso.nome}</option>`).join('')}
+                        </select><br><br>
+                        <label for="projeto">Projeto</label><br>
+                        <select id="projeto" name="projeto" class="swal2-input">
+                            ${projetos.map(projeto => `<option value="${projeto.id}" ${aluno.id_projeto === projeto.id ? 'selected' : ''}>${projeto.nome}</option>`).join('')}
+                        </select>
+                    </form>
+                `,
+                showCancelButton: true,
+                confirmButtonText: id ? "Atualizar" : "Adicionar",
+                preConfirm: () => {
+                    const nome = document.getElementById('nome').value;
+                    const ra = document.getElementById('ra').value;
+                    const id_curso = document.getElementById('curso').value;
+                    const id_projeto = document.getElementById('projeto').value;
+                    if (!nome) {
+                        Swal.showValidationMessage("O nome do aluno é obrigatório!");
+                        return false;
+                    }
+
+                    return fetch(`/alunos${id ? `?id=${id}` : ''}`, {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({
+                            id: id,
+                            nome: nome,
+                            ra: ra,
+                            curso: id_curso,
+                            projeto: id_projeto
+                        })
+                    }).then(response => {
+                        if (!response.ok) throw new Error(response.statusText);
+                        return response;
+                    }).catch(error => Swal.showValidationMessage(`Erro: ${error}`));
+                }
+            }).then(result => {
+                if (result.isConfirmed) {
+                    Swal.fire('Sucesso!', 'O aluno foi salvo com sucesso!', 'success');
+                    setTimeout(() => window.location.reload(), 2000);
+                }
+            });
+        } catch (error) {
+            Swal.fire('Erro', 'Erro ao carregar dados. Tente novamente.', 'error');
+        }
+    }
+</script>
+</html>

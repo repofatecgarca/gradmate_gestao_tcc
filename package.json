@@ -2,27 +2,27 @@
   "name": "gestao-tcc",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "start": "node server",
-    "build": "npm install && prisma generate"
+    "build": "npm install"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@prisma/client": "^4.13.0",
     "bcrypt": "^5.1.0",
     "dotenv": "^16.0.3",
-    "ejs": "^3.1.9",
+    "ejs": "^3.1.10",
     "express": "^4.18.2",
     "fs": "^0.0.1-security",
     "html-to-pdf": "^0.1.11",
     "jsonwebtoken": "^9.0.0",
+    "log4js": "^6.9.1",
     "multer": "^1.4.5-lts.1",
-    "nodemailer": "^6.9.5",
+    "mysql2": "^3.10.0",
+    "nodemailer": "6.9.9",
     "path": "^0.12.7",
-    "prisma": "^4.13.0",
-    "puppeteer": "^21.5.0"
+    "puppeteer": "^21.11.0"
   }
 }
